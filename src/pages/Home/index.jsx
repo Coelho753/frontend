@@ -147,7 +147,7 @@ function Home() {
               <p><strong>Idade:</strong> {user.age}</p>
               <p><strong>Sexo:</strong> {user.sexo}</p>
               <p><strong>Faculdade:</strong> {user.faculdade}</p>
-              <p><strong>Mensagem:</strong> {user.mensagem}</p>
+              <p><strong>Deixe uma Mensagem:</strong> {user.mensagem}</p>
             </div>
           </div>
         ))}
