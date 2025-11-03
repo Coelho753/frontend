@@ -5,6 +5,7 @@ import api from '../../services/api.js'
 function Home() {
   const [users, setUsers] = useState([])
   const [sexo, setSexo] = useState('')
+  const [loading, setLoading] = useState(true)
   const inputName = useRef()
   const inputAge = useRef()
   const inputFaculdade = useRef()
@@ -12,8 +13,10 @@ function Home() {
 
   // 🔹 Busca inicial de usuários
   async function getUsers() {
+    setLoading(true)
     const res = await api.get('/usuarios')
     setUsers(res.data)
+    setLoading(false)
   }
 
   // 🔤 Deixa a primeira letra de cada palavra maiúscula
@@ -31,7 +34,7 @@ function Home() {
   async function createUsers() {
     const name = formatarNome(inputName.current.value).trim()
     const age = inputAge.current.value.trim()
-    const faculdade = inputFaculdade.current.value.trim()
+    const faculdade = formatarNome(inputFaculdade.current.value).trim()
     const mensagem = inputMensagem.current.value.trim()
 
     if (!name || !age || !sexo || !faculdade || !mensagem) {
@@ -139,19 +142,30 @@ function Home() {
         </button>
       </form>
 
+
       <div className="cards-list">
-        {users.map((user) => (
-          <div key={user.id} className="card" style={getCardStyle(user.sexo)}>
-            <div>
-              <h2>{user.name}</h2>
-              <p><strong>Idade:</strong> {user.age}</p>
-              <p><strong>Sexo:</strong> {user.sexo}</p>
-              <p><strong>Faculdade:</strong> {user.faculdade}</p>
-              <p><strong>Deixe uma Mensagem:</strong> {user.mensagem}</p>
-            </div>
+        {loading ? (
+          <div className="loading">
+            <div className="spinner"></div>
+            <p>Carregando usuários...</p>
           </div>
-        ))}
+        ) : users.length === 0 ? (
+          <p className="no-users">Nenhum usuário cadastrado ainda.</p>
+        ) : (
+          users.map((user) => (
+            <div key={user.id} className="card fade-in" style={getCardStyle(user.sexo)}>
+              <div>
+                <h2>{user.name}</h2>
+                <p><strong>Idade:</strong> {user.age}</p>
+                <p><strong>Sexo:</strong> {user.sexo}</p>
+                <p><strong>Faculdade:</strong> {user.faculdade}</p>
+                <p><strong>Mensagem:</strong> {user.mensagem}</p>
+              </div>
+            </div>
+          ))
+        )}
       </div>
+
     </div>
   )
 }
